@@ -12,9 +12,14 @@ import * as vscode from 'vscode';
  * @param context the execution context of the calling VSCode instance.
  */
 export function activate(context: vscode.ExtensionContext) {
+	// Register the new command
 	let buildChecker = vscode.commands.registerCommand('extension.helloWorld', () => {
 		vscode.window.showInformationMessage('Hello World!');
 	});
+	
+	// Create the status bar item & position it
+
+	// Add the new command to the subscriptions.
 	context.subscriptions.push(buildChecker);
 }
 

@@ -20,7 +20,7 @@
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
 		"test": "jest",
-		"test-dev": "jest -watch"
+		"test-dev": "jest --watch"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
