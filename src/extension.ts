@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { fetchBuilds, JobStatus } from './cloudbuild';
 
 /**
  * Activate is called whenever the current workspace contains a 
@@ -14,8 +15,24 @@ import * as vscode from 'vscode';
 export function activate(context: vscode.ExtensionContext) {
 	// Create the status bar item & position it
 	let statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
-	statusBar.text = 'CloudBuild : $(check)';
-	statusBar.tooltip = 'Builded 5 minutes ago.';
+	let jobs = fetchBuilds("master");
+	if (jobs.length < 1) {
+		statusBar.text = 'CloudBuild : $(circle-slash)';
+		statusBar.tooltip = 'No build for the current branch yet.';	
+	} else {
+		let lastJob = jobs[0];
+		statusBar.tooltip = 'Builded ';
+		if (lastJob.getStatus() === JobStatus.SUCCESS) {
+			statusBar.text = 'CloudBuild : $(check)';
+		} else if (lastJob.getStatus() === JobStatus.FAILURE) {
+			statusBar.text = 'CloudBuild : $(x)';
+		} else {
+			statusBar.tooltip = 'Started ';
+			statusBar.text = 'CloudBuild : $(repo-sync~spin)';
+		}
+		let lastRunned = new Date().getTime() - lastJob.getStartTime().getTime();
+		statusBar.tooltip += new Date(lastRunned).getMinutes() + ' ago.';
+	}
 	statusBar.show();
 }
 
