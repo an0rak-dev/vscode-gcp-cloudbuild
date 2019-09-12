@@ -15,25 +15,29 @@ import { fetchBuilds, JobStatus } from './cloudbuild';
 export function activate(context: vscode.ExtensionContext) {
 	// Create the status bar item & position it
 	let statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
-	let jobs = fetchBuilds("master");
-	if (jobs.length < 1) {
-		statusBar.text = 'CloudBuild : $(circle-slash)';
-		statusBar.tooltip = 'No build for the current branch yet.';	
-	} else {
-		let lastJob = jobs[0];
-		statusBar.tooltip = 'Builded ';
-		if (lastJob.getStatus() === JobStatus.SUCCESS) {
-			statusBar.text = 'CloudBuild : $(check)';
-		} else if (lastJob.getStatus() === JobStatus.FAILURE) {
-			statusBar.text = 'CloudBuild : $(x)';
+	let jobs = fetchBuilds("master", (jobs) => {
+		if (jobs.length < 1) {
+			statusBar.text = 'CloudBuild : $(circle-slash)';
+			statusBar.tooltip = 'No build for the current branch yet.';	
 		} else {
-			statusBar.tooltip = 'Started ';
-			statusBar.text = 'CloudBuild : $(repo-sync~spin)';
+			let lastJob = jobs[0];
+			statusBar.tooltip = 'Builded ';
+			if (lastJob.status === JobStatus.SUCCESS) {
+				statusBar.text = 'CloudBuild : $(check)';
+			} else if (lastJob.status === JobStatus.FAILURE) {
+				statusBar.text = 'CloudBuild : $(x)';
+			} else {
+				statusBar.tooltip = 'Started ';
+				statusBar.text = 'CloudBuild : $(repo-sync~spin)';
+			}
+			let lastRunned = new Date().getTime() - lastJob.startTime.getTime(); 
+			// FIXME Bad time in tooltip (38minutes ago for something last built 
+			// more than 8days ago...)
+			// TODO Use revelant scale (don't use 11520 minutes when 8days does the job)
+			statusBar.tooltip += new Date(lastRunned).getMinutes() + ' minutes ago.';
 		}
-		let lastRunned = new Date().getTime() - lastJob.getStartTime().getTime();
-		statusBar.tooltip += new Date(lastRunned).getMinutes() + ' ago.';
-	}
-	statusBar.show();
+		statusBar.show();
+	});
 }
 
 /**
