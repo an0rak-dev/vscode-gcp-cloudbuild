@@ -30,11 +30,8 @@ export function activate(context: vscode.ExtensionContext) {
 				statusBar.tooltip = 'Started ';
 				statusBar.text = 'CloudBuild : $(repo-sync~spin)';
 			}
-			let lastRunned = new Date().getTime() - lastJob.startTime.getTime(); 
-			// FIXME Bad time in tooltip (38minutes ago for something last built 
-			// more than 8days ago...)
-			// TODO Use revelant scale (don't use 11520 minutes when 8days does the job)
-			statusBar.tooltip += new Date(lastRunned).getMinutes() + ' minutes ago.';
+			let lastBuildDate = differenceBetween(lastJob.startTime, new Date());
+			statusBar.tooltip += lastBuildDate + ' minutes ago.';
 		}
 		statusBar.show();
 	});
@@ -46,3 +43,9 @@ export function activate(context: vscode.ExtensionContext) {
  * It will also remove the interval function which pings `gcloud`.
  */
 export function deactivate() {}
+
+function differenceBetween(date1: Date, date2: Date): number {
+	let oneMinuteInMs = 60000;
+	let lastRunned = date2.getTime() - date1.getTime(); 
+	return Math.round(lastRunned / oneMinuteInMs);
+}

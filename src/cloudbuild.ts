@@ -34,7 +34,6 @@ export function fetchBuilds(branchName: string, callback: (jobs:Array<Job>) => v
 
    childprocess.exec(cmd, (err: Error, stdout: string, stderr: string) => {
       if (err) {
-         // TODO Treat error
          console.error("Unable to call the gcloud command : ", err);
          callback([]);
          return;
