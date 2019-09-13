@@ -15,7 +15,7 @@ import { fetchBuilds, JobStatus } from './cloudbuild';
 export function activate(context: vscode.ExtensionContext) {
 	// Create the status bar item & position it
 	let statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
-	let jobs = fetchBuilds("master", (jobs) => {
+	fetchBuilds("master", (jobs) => {
 		if (jobs.length < 1) {
 			statusBar.text = 'CloudBuild : $(circle-slash)';
 			statusBar.tooltip = 'No build for the current branch yet.';	
