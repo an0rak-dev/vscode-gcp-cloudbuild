@@ -1,7 +1,9 @@
 steps:
-  - name: node:10.15.1
+  - id: download-dependencies
+    name: node:10.15.1
     entrypoint: npm
     args: ['install']
-  - name: node:10.15.1
+  - id: compile
+    name: node:10.15.1
     entrypoint: npm
     args: ['run', 'compile']
