@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { fetchBuilds, JobStatus } from './cloudbuild';
+import { fetchBuilds, Job, JobStatus } from './cloudbuild';
+import { GitRepo } from './git';
 
 /**
  * Activate is called whenever the current workspace contains a 
@@ -15,26 +16,38 @@ import { fetchBuilds, JobStatus } from './cloudbuild';
 export function activate(context: vscode.ExtensionContext) {
 	// Create the status bar item & position it
 	let statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
-	fetchBuilds("master", (jobs) => {
-		if (jobs.length < 1) {
-			statusBar.text = 'CloudBuild : $(circle-slash)';
-			statusBar.tooltip = 'No build for the current branch yet.';	
+	if (!vscode.workspace.rootPath) {
+		fetchBuilds("master", (jobs) => refreshStatusBar(jobs, statusBar));
+	} else {
+		let repo = new GitRepo(vscode.workspace.rootPath);
+		repo.getCurrentBranch((branch) => {
+			fetchBuilds(branch, (jobs) => {
+				refreshStatusBar(jobs, statusBar);
+			});
+		});
+
+	}
+}
+
+function refreshStatusBar(jobs: Array<Job>, statusBar: vscode.StatusBarItem) {
+	if (jobs.length < 1) {
+		statusBar.text = 'CloudBuild : $(circle-slash)';
+		statusBar.tooltip = 'No build for the current branch yet.';	
+	} else {
+		let lastJob = jobs[0];
+		statusBar.tooltip = 'Builded ';
+		if (lastJob.status === JobStatus.SUCCESS) {
+			statusBar.text = 'CloudBuild : $(check)';
+		} else if (lastJob.status === JobStatus.FAILURE) {
+			statusBar.text = 'CloudBuild : $(x)';
 		} else {
-			let lastJob = jobs[0];
-			statusBar.tooltip = 'Builded ';
-			if (lastJob.status === JobStatus.SUCCESS) {
-				statusBar.text = 'CloudBuild : $(check)';
-			} else if (lastJob.status === JobStatus.FAILURE) {
-				statusBar.text = 'CloudBuild : $(x)';
-			} else {
-				statusBar.tooltip = 'Started ';
-				statusBar.text = 'CloudBuild : $(repo-sync~spin)';
-			}
-			let lastBuildDate = differenceBetween(lastJob.startTime, new Date());
-			statusBar.tooltip += lastBuildDate + ' minutes ago.';
+			statusBar.tooltip = 'Started ';
+			statusBar.text = 'CloudBuild : $(repo-sync~spin)';
 		}
-		statusBar.show();
-	});
+		let lastBuildDate = differenceBetween(lastJob.startTime, new Date());
+		statusBar.tooltip += lastBuildDate + ' minutes ago.';
+	}
+	statusBar.show();
 }
 
 /**
