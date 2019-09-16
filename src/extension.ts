@@ -4,7 +4,7 @@ import { GitRepo } from './git';
 
 
 var refreshTicker: NodeJS.Timeout;
-var statusBar: vscode.StatusBarItem;
+var statusBar: vscode.StatusBarItem | undefined;
 
 /**
  * Activate is called whenever the current workspace contains a 
@@ -22,19 +22,19 @@ export function activate(context: vscode.ExtensionContext) {
 	statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
 	refreshTicker = setInterval(() => {
 		if (!vscode.workspace.rootPath) {
-			fetchBuilds("master", (jobs) => refreshStatusBar(jobs));
+			fetchBuilds("master")
+				.then((jobs) => refreshStatusBar(jobs));
 		} else {
 			let repo = new GitRepo(vscode.workspace.rootPath);
-			repo.getCurrentBranch((branch) => {
-				fetchBuilds(branch, (jobs) => {
-					refreshStatusBar(jobs);
-				});
-			});
+			repo.getCurrentBranch()
+				.then(branch => fetchBuilds(branch))
+				.then(jobs => refreshStatusBar(jobs));
 		}
 	}, 1000);
 }
 
 function refreshStatusBar(jobs: Array<Job>) {
+	if (!statusBar) {return;}
 	if (jobs.length < 1) {
 		statusBar.text = 'CloudBuild : $(circle-slash)';
 		statusBar.tooltip = 'No build for the current branch yet.';	
@@ -62,7 +62,7 @@ function refreshStatusBar(jobs: Array<Job>) {
  */
 export function deactivate() {
 	clearInterval(refreshTicker);
-
+	statusBar = undefined;
 }
 
 function differenceBetween(date1: Date, date2: Date): number {
