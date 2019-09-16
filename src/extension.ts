@@ -50,7 +50,7 @@ function refreshStatusBar(jobs: Array<Job>) {
 			statusBar.text = 'CloudBuild : $(repo-sync~spin)';
 		}
 		let lastBuildDate = differenceBetween(lastJob.startTime, new Date());
-		statusBar.tooltip += lastBuildDate + ' minutes ago.';
+		statusBar.tooltip += normalizeMinutesAmount(lastBuildDate);
 	}
 	statusBar.show();
 }
@@ -69,4 +69,28 @@ function differenceBetween(date1: Date, date2: Date): number {
 	let oneMinuteInMs = 60000;
 	let lastRunned = date2.getTime() - date1.getTime(); 
 	return Math.round(lastRunned / oneMinuteInMs);
+}
+
+function normalizeMinutesAmount(minutes: number): string {
+	let result = '';
+	let mins = Math.floor(minutes % 60);
+	let onlyHours = Math.floor(minutes / 60);
+	let hours = Math.floor(onlyHours % 24);
+	let onlyDays = Math.floor(onlyHours / 24);
+	let days = Math.floor(onlyDays % 30); 
+	let months = Math.floor(onlyDays / 30);
+	
+	if (months > 0) {
+		result += months + ' month' + ((months >  1) ? 's ' : ' ');
+	}
+	if (days > 0) {
+		result += days + ' day' + ((days >  1) ? 's ' : ' ');
+	}
+	if (hours > 0) {
+		result += hours + ' hour' + ((hours >  1) ? 's ' : ' ');
+	}
+	result += mins + ' minute' + ((mins > 1) ? 's ' : ' ');
+
+	result += 'ago.';
+	return result;
 }
