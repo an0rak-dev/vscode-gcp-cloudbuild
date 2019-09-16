@@ -2,6 +2,10 @@ import * as vscode from 'vscode';
 import { fetchBuilds, Job, JobStatus } from './cloudbuild';
 import { GitRepo } from './git';
 
+
+var refreshTicker: NodeJS.Timeout;
+var statusBar: vscode.StatusBarItem;
+
 /**
  * Activate is called whenever the current workspace contains a 
  * "cloudbuild.yaml" file.
@@ -15,21 +19,22 @@ import { GitRepo } from './git';
  */
 export function activate(context: vscode.ExtensionContext) {
 	// Create the status bar item & position it
-	let statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
-	if (!vscode.workspace.rootPath) {
-		fetchBuilds("master", (jobs) => refreshStatusBar(jobs, statusBar));
-	} else {
-		let repo = new GitRepo(vscode.workspace.rootPath);
-		repo.getCurrentBranch((branch) => {
-			fetchBuilds(branch, (jobs) => {
-				refreshStatusBar(jobs, statusBar);
+	statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
+	refreshTicker = setInterval(() => {
+		if (!vscode.workspace.rootPath) {
+			fetchBuilds("master", (jobs) => refreshStatusBar(jobs));
+		} else {
+			let repo = new GitRepo(vscode.workspace.rootPath);
+			repo.getCurrentBranch((branch) => {
+				fetchBuilds(branch, (jobs) => {
+					refreshStatusBar(jobs);
+				});
 			});
-		});
-
-	}
+		}
+	}, 1000);
 }
 
-function refreshStatusBar(jobs: Array<Job>, statusBar: vscode.StatusBarItem) {
+function refreshStatusBar(jobs: Array<Job>) {
 	if (jobs.length < 1) {
 		statusBar.text = 'CloudBuild : $(circle-slash)';
 		statusBar.tooltip = 'No build for the current branch yet.';	
@@ -55,7 +60,10 @@ function refreshStatusBar(jobs: Array<Job>, statusBar: vscode.StatusBarItem) {
  * 
  * It will also remove the interval function which pings `gcloud`.
  */
-export function deactivate() {}
+export function deactivate() {
+	clearInterval(refreshTicker);
+
+}
 
 function differenceBetween(date1: Date, date2: Date): number {
 	let oneMinuteInMs = 60000;
