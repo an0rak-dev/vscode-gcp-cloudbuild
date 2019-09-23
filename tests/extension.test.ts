@@ -41,13 +41,17 @@ describe('extension', () => {
          expect(statusBar).toBeDefined();
       });
 
+/* TODO: Finish thoses
       test('should periodically fetch the builds', () => {});
       test('should display the good status bar label depending the job\'s status', () => {});
       test('should set the tooltip of the status bar with the time elapsed since last job', () => {});
+*/
    });
 
    describe('deactivate', () => {
+/* TODO: Finish thoses
       test('should unset the statusbar', () => {});
       test('should stop the ping interval', () => {});
+*/
    });
 });
