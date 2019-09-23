@@ -7,3 +7,7 @@ steps:
     name: node:10.15.1
     entrypoint: npm
     args: ['run', 'compile']
+  - id: test
+    name: node:10.15.1
+    entrypoint: npm
+    args: ['test']
