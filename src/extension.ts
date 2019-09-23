@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
 import { fetchBuilds, Job, JobStatus } from './cloudbuild';
 import { GitRepo } from './git';
+import * as time from './time';
 
 
-var refreshTicker: NodeJS.Timeout;
-var statusBar: vscode.StatusBarItem | undefined;
+export var refreshTicker: NodeJS.Timeout;
+export var statusBar: vscode.StatusBarItem | undefined;
 
 /**
  * Activate is called whenever the current workspace contains a 
@@ -12,8 +13,14 @@ var statusBar: vscode.StatusBarItem | undefined;
  * 
  * After activation, the extension will periodically (1000ms) call the `gcloud` 
  * command to get the list of all the builds for the current branch, then it 
- * will display the most recent build status in the status bar (and as a tooltip
- * the timestamp of the build).
+ * will display the most recent build status in the status bar with :
+ * - a $(circle-slash) if no build is found
+ * - a $(check) if the most recent build is in success
+ * - a $(x) if the most recent build is in failure
+ * - a $(repo-sync) (spining) if the most recent build is pending or running 
+ * 
+ * The status bar element will also have a tooltip with the time elapsed between 
+ * now and the last build.
  * 
  * @param context the execution context of the calling VSCode instance.
  */
@@ -33,6 +40,30 @@ export function activate(context: vscode.ExtensionContext) {
 	}, 1000);
 }
 
+/**
+ * Deactivate is called whenever the extensions is disabled or uninstalled.
+ * 
+ * It will remove the status bar item and the interval function which pings `gcloud`.
+ */
+export function deactivate() {
+	clearInterval(refreshTicker);
+	statusBar = undefined;
+}
+
+/**
+ * Refresh the status bar with the state of the most recent job in the given job list 
+ * (usually the first one).
+ * 
+ * Refresh the text of the status bar with :
+ * - a circle-slash if no build is found
+ * - a check if the most recent build is in success
+ * - a x if the most recent build is in failure
+ * - a repo-sync (spining) if the most recent build is pending or running
+ * 
+ * Refresh the statusbar's tooltip with time elapsed between the most recent job start and now.
+ * 
+ * @param jobs the Cloudbuild jobs list
+ */
 function refreshStatusBar(jobs: Array<Job>) {
 	if (!statusBar) {return;}
 	if (jobs.length < 1) {
@@ -49,48 +80,8 @@ function refreshStatusBar(jobs: Array<Job>) {
 			statusBar.tooltip = 'Started ';
 			statusBar.text = 'CloudBuild : $(repo-sync~spin)';
 		}
-		let lastBuildDate = differenceBetween(lastJob.startTime, new Date());
-		statusBar.tooltip += normalizeMinutesAmount(lastBuildDate);
+		let lastBuildDate = time.differenceBetween(lastJob.startTime, new Date());
+		statusBar.tooltip += time.normalizeMinutesAmount(lastBuildDate);
 	}
 	statusBar.show();
-}
-
-/**
- * Deactivate is called whenever the extensions is disabled or uninstalled.
- * 
- * It will also remove the interval function which pings `gcloud`.
- */
-export function deactivate() {
-	clearInterval(refreshTicker);
-	statusBar = undefined;
-}
-
-function differenceBetween(date1: Date, date2: Date): number {
-	let oneMinuteInMs = 60000;
-	let lastRunned = date2.getTime() - date1.getTime(); 
-	return Math.round(lastRunned / oneMinuteInMs);
-}
-
-function normalizeMinutesAmount(minutes: number): string {
-	let result = '';
-	let mins = Math.floor(minutes % 60);
-	let onlyHours = Math.floor(minutes / 60);
-	let hours = Math.floor(onlyHours % 24);
-	let onlyDays = Math.floor(onlyHours / 24);
-	let days = Math.floor(onlyDays % 30); 
-	let months = Math.floor(onlyDays / 30);
-	
-	if (months > 0) {
-		result += months + ' month' + ((months >  1) ? 's ' : ' ');
-	}
-	if (days > 0) {
-		result += days + ' day' + ((days >  1) ? 's ' : ' ');
-	}
-	if (hours > 0) {
-		result += hours + ' hour' + ((hours >  1) ? 's ' : ' ');
-	}
-	result += mins + ' minute' + ((mins > 1) ? 's ' : ' ');
-
-	result += 'ago.';
-	return result;
 }

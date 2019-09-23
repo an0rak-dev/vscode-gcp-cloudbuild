@@ -2,7 +2,34 @@
 	"name": "vscode-gcp-cloudbuild",
 	"displayName": "vscode-gcp-cloudbuild",
 	"description": "Add GCP's CloudBuild infos & actions to VSCode",
-	"version": "0.0.1",
+	"keywords": [
+		"vscode",
+		"visual studio code",
+		"gcp",
+		"cloudbuild"
+	],
+	"bugs": {
+		"url": "https://github.com/an0rak-dev/vscode-gcp-cloudbuild/issues"
+	},
+	"license": "Apache-2.0",
+	"author": {
+		"name": "Sylvain Nieuwlandt",
+		"url": "https://an0rak.dev"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/an0rak-dev/vscode-gcp-cloudbuild"
+	},
+	"version": "1.0.0",
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile",
+		"test": "jest",
+		"test-dev": "jest --watch"
+	},
+	"contributes": {},
 	"engines": {
 		"vscode": "^1.38.0"
 	},
@@ -13,15 +40,6 @@
 		"workspaceContains:**/cloudbuild.yaml"
 	],
 	"main": "./out/src/extension.js",
-	"contributes": {},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile",
-		"test": "jest",
-		"test-dev": "jest --watch"
-	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/node": "^10.12.21",

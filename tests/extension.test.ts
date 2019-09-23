@@ -1,9 +1,9 @@
 const vscode = require('./__mocks__/vscode');
 const cloudbuild = require('./__mocks__/cloudbuild');
-import {activate} from '../src/extension';
+import {activate, statusBar, deactivate} from '../src/extension';
 import { StatusBarAlignment } from 'vscode';
 
-describe('activate', () => {
+describe('extension', () => {
    let context: any;
 
    beforeEach(() => {
@@ -24,43 +24,30 @@ describe('activate', () => {
             push: jest.fn()
          }
       };
-      
    });
-/*
-   test('should register the gcp.cloudbuild.fetch command', () => {
-      // When
-      activate(context);
-      // Then
-      let calls = vscode.commands.registerCommand.mock.calls;
-      expect(calls).toHaveLength(1);
-      expect(calls[0][0]).toBe('gcp.cloudbuild.fetch');
-   });
-*/
-   test('should create the status bar item with all the informations', () => {
-      // When
-      activate(context);
-      // Then
-      let calls = vscode.window.createStatusBarItem.mock.calls;
-      let results = vscode.window.createStatusBarItem.mock.results;
-      expect(calls).toHaveLength(1);
-      expect(calls[0][0]).toBe(StatusBarAlignment.Left);
-      expect(calls[0][1]).toBeGreaterThan(500);
-      expect(results[0].value.text).toBe('CloudBuild : $(check)');
-      expect(results[0].value.tooltip).toBe('Builded 5 minutes ago.');
 
+   afterEach(() => {
+      deactivate();
    });
-/*
-   test('should add the new command to the context\'s subscriptions', () => {
-      // Given
-      vscode.commands.registerCommand.mockImplementation(
-         (cmdName: string, callback: any) => { return cmdName; }
-      );
-      // When
-      activate(context);
-      // Then
-      let calls = context.subscriptions.push.mock.calls;
-      expect(calls).toHaveLength(1);
-      expect(calls[0][0]).toBe('gcp.cloudbuild.fetch');
+
+   describe('activate', () => {
+      test('should set the status bar', () => {
+         // When
+         activate(context);
+         // Then
+         expect(vscode.window.createStatusBarItem.mock.calls).toHaveLength(1);
+         expect(vscode.window.createStatusBarItem.mock.calls[0][0]).toBe(vscode.StatusBarAlignment.Left);
+         expect(vscode.window.createStatusBarItem.mock.calls[0][1]).toBeGreaterThanOrEqual(1000);
+         expect(statusBar).toBeDefined();
+      });
+
+      test('should periodically fetch the builds', () => {});
+      test('should display the good status bar label depending the job\'s status', () => {});
+      test('should set the tooltip of the status bar with the time elapsed since last job', () => {});
    });
-*/
+
+   describe('deactivate', () => {
+      test('should unset the statusbar', () => {});
+      test('should stop the ping interval', () => {});
+   });
 });

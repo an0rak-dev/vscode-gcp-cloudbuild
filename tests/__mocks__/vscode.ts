@@ -6,6 +6,10 @@ const window = {
    createStatusBarItem: jest.fn()
 };
 
+const workspace = {
+   rootPath: "master"
+};
+
 enum StatusBarAlignment {
    Left,
    Right
