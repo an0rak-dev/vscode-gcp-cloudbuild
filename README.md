@@ -21,10 +21,11 @@ Also, the project of your `gcloud` command must be already setted (with the comm
 
 ## Installation
 
-To install the extension with the latest version of Visual Studio Code, 
-open up the Visual Studio Code Command Palette (`F1`), type `install` and choose 
-`Extensions: Install Extensions`. In the Search Extensions in Marketplace text box, type `gcp-cloudbuild`. 
-Find the VSCode GCP CloudBuild extension published by Sylvain Nieuwlandt and click the Install button. 
+To install the extension with the latest version of Visual Studio Code :
+* open up the Visual Studio Code Command Palette (`F1`)
+* type `install` and choose `Extensions: Install Extensions`
+* in the Search Extensions in Marketplace text box, type `gcp-cloudbuild`. 
+* Find the VSCode GCP CloudBuild extension published by Sylvain Nieuwlandt and click the Install button. 
 
 ## Known Issues
 
@@ -34,4 +35,4 @@ If you find an issue or have a feature request, you can contribute it
 ## Release Notes
 
 * 1.0.0 : Initial Release
-** Display the status of a CloudBuild pipeline for the current branch.
+    * Display the status of a CloudBuild pipeline for the current branch.
