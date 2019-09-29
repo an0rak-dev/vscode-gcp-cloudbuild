@@ -1,6 +1,6 @@
 {
 	"name": "vscode-gcp-cloudbuild",
-	"displayName": "vscode-gcp-cloudbuild",
+	"displayName": "VSCode support for GCP CloudBuild",
 	"description": "Add GCP's CloudBuild infos & actions to VSCode",
 	"keywords": [
 		"vscode",
@@ -29,6 +29,7 @@
 		"test": "jest",
 		"test-dev": "jest --watch"
 	},
+	"publisher": "an0rak-dev",
 	"contributes": {},
 	"icon": "assets/cloudbuild_logo.png",
 	"engines": {
