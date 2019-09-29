@@ -30,6 +30,7 @@
 		"test-dev": "jest --watch"
 	},
 	"contributes": {},
+	"icon": "assets/cloudbuild_logo.png",
 	"engines": {
 		"vscode": "^1.38.0"
 	},
