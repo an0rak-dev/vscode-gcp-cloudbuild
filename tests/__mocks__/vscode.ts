@@ -33,5 +33,6 @@ enum StatusBarAlignment {
 export {
    commands,
    window,
+   workspace,
    StatusBarAlignment
 };

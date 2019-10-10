@@ -31,8 +31,8 @@ export enum JobStatus {
  * Represents a Cloudbuild job with its start time and its status
  */
 export class Job {
-   private _status: JobStatus;
-   private _startTime: Date;
+   private readonly _status: JobStatus;
+   private readonly _startTime: Date;
 
    /**
     * Create a new Job object with the given status and start time.
