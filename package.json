@@ -20,14 +20,15 @@
 		"type": "git",
 		"url": "https://github.com/an0rak-dev/vscode-gcp-cloudbuild"
 	},
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
-		"test": "jest --coverage",
-		"test-dev": "jest --watch"
+		"test": "jest --verbose --no-cache",
+		"test:dev": "jest --watch",
+		"coverage": "jest --coverage"
 	},
 	"publisher": "an0rak-dev",
 	"contributes": {},
