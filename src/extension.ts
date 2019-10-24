@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 import * as vscode from 'vscode';
-import {fetchBuilds, Job, JobStatus} from './cloudbuild';
+import {fetchBuilds, Job} from './cloudbuild';
 import {GitRepo} from './git';
 import * as time from './time';
+import {JobStatus} from './types';
 
 
 export var refreshTicker: NodeJS.Timeout;
