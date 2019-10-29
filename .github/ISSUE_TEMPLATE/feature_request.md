@@ -2,7 +2,7 @@
 name: Feature request
 about: Do you have any idea to help up improve vscode-gcp-cloudbuild ?
 title: ''
-labels: Feature Request
+labels: Enhancement
 assignees: ''
 
 ---

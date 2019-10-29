@@ -8,13 +8,13 @@ on vscode-gcp-cloudbuild functionalities.)
 
 ## Changes description
 
-**Add some quick description about what your PullRequest change in
-vscode-gcp-cloudbuild's feature/behavior**
+*Add some quick description about what your PullRequest change in
+vscode-gcp-cloudbuild's feature/behavior*
 
 ## Technical description
 
-**Add a quick description about what your PullRequest change in 
-vscode-gcp-cloudbuild's code. (example: add a processor check in...)**
+*Add a quick description about what your PullRequest change in 
+vscode-gcp-cloudbuild's code. (example: add a processor check in...)*
 
 ## PR CheckList
 

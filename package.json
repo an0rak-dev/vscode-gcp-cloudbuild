@@ -16,6 +16,13 @@
 		"name": "Sylvain Nieuwlandt",
 		"url": "https://an0rak.dev"
 	},
+	"contributors": [
+		{
+			"name": "Jakub Kaluzka",
+			"email": "jkaluzka@gmail.com",
+			"url": "https://github.com/jkaluzka"
+		}
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/an0rak-dev/vscode-gcp-cloudbuild"
