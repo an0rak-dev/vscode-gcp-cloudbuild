@@ -18,6 +18,7 @@ import * as cloudBuild from '../src/cloudbuild';
 import {activate, statusBar, deactivate, refreshTicker} from '../src/extension';
 import {StatusBarAlignment} from 'vscode';
 import {GitRepo} from '../src/git';
+import {JobStatus} from '../src/types';
 
 describe('extension', () => {
   let context: any;
@@ -79,7 +80,7 @@ describe('extension', () => {
 
     describe('should display the good status bar label depending the job\'s status', () => {
       test('should periodically fetch the builds with SUCCESS Job', () => {
-        const job = new cloudBuild.Job(cloudBuild.JobStatus.SUCCESS, new Date());
+        const job = new cloudBuild.Job(JobStatus.SUCCESS, new Date());
         fetchBuildSpy = fetchBuildSpy.mockResolvedValue([job]);
         jest.useFakeTimers();
         activate(context);
@@ -89,7 +90,7 @@ describe('extension', () => {
       });
 
       test('should periodically fetch the builds with FAILURE Job', () => {
-        const job = new cloudBuild.Job(cloudBuild.JobStatus.FAILURE, new Date());
+        const job = new cloudBuild.Job(JobStatus.FAILURE, new Date());
         fetchBuildSpy = fetchBuildSpy.mockResolvedValue([job]);
         jest.useFakeTimers();
         activate(context);
@@ -99,7 +100,7 @@ describe('extension', () => {
       });
 
       test('should periodically fetch the builds with PENDING Job', () => {
-        const job = new cloudBuild.Job(cloudBuild.JobStatus.PENDING, new Date());
+        const job = new cloudBuild.Job(JobStatus.PENDING, new Date());
         fetchBuildSpy = fetchBuildSpy.mockResolvedValue([job]);
         jest.useFakeTimers();
         activate(context);

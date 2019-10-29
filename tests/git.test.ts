@@ -13,8 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-import createSpy = jasmine.createSpy;
-
 jest.mock('path');
 jest.mock('fs');
 import {GitRepo} from '../src/git';
