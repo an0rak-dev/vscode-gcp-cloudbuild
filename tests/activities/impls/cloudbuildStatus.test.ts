@@ -30,7 +30,7 @@ describe('LastJobCloudbuildStatus', () => {
    describe('ticker', () => { 
       let sut : CloudbuildStatus;
       const timerTick = 1000;
-      let serviceMock: ServicesFactory;
+      let serviceMock: MockServicesFactory;
 
       beforeEach(() => {
          serviceMock = new MockServicesFactory();
@@ -46,10 +46,23 @@ describe('LastJobCloudbuildStatus', () => {
 
       test('should call gcloud when new commits are pushed', () => {
          // Given
-         
+         const oldCommitId = 'edeff9383593eaad3';
+         const newCommitId = 'aaabedd4392258bbac';
+         const branch = 'feat/something';
+         serviceMock.getGitRepo('').getCurrentBranch = jest.fn().mockImplementation(() => {
+            return new Promise((res, rej) => { res(branch); });
+         });
+        /*
+         serviceMock.getGitRepo('').getRemoteHeads = jest.fn().mockImplementation((branch) => {
+            return new Promise((res, rej) => { res([oldCommitId]); });
+         });
+         serviceMock.getGitRepo('').getCurrentHead = jest.fn().mockImplementation((branch) => {
+            return new Promise((res, rej) => { res(newCommitId); });
+         });
+         */
          // When
-         //sut.startAutoRefresh();
-         //jest.advanceTimersByTime(timerTick);
+         sut.startAutoRefresh();
+         jest.advanceTimersByTime(timerTick);
          // Then
       });
 
