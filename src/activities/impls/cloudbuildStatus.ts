@@ -21,10 +21,9 @@ export class LastJobCloudbuildStatus {
     * Create a new LastJobCloudbuildStatus with an auto-refresh property 
     * disabled by default.
     */
-   constructor() {
+   constructor(services : ServicesFactory) {
       this.nativeStatusBar = vscode.window
          .createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
-      let services = new ServicesFactory();
       this.gcloud = services.getGCloud();
       if (vscode.workspace.rootPath) {
          this.gitRepo = services.getGitRepo(vscode.workspace.rootPath);

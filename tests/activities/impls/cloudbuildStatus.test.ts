@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { LastJobCloudbuildStatus } from "../../../src/activities/impls/cloudbuildStatus";
 import { CloudbuildStatus } from '../../../src/activities/activities';
+import { MockServicesFactory } from '../../__mocks__/services';
 import { ServicesFactory } from '../../../src/services/services';
 
 describe('LastJobCloudbuildStatus', () => {
@@ -11,7 +12,7 @@ describe('LastJobCloudbuildStatus', () => {
             return {alignment : align, priority : prio};
          });
          // When
-         const sut = new LastJobCloudbuildStatus();
+         const sut = new LastJobCloudbuildStatus(new MockServicesFactory());
          // Then
          expect(sut.getItem()).toBeDefined();
          expect(sut.getItem().alignment).toBe(vscode.StatusBarAlignment.Left);
@@ -20,7 +21,7 @@ describe('LastJobCloudbuildStatus', () => {
 
       test('should disable the ticker', () => {
          // When
-         const sut = new LastJobCloudbuildStatus();
+         const sut = new LastJobCloudbuildStatus(new MockServicesFactory());
          // Then
          expect(sut.isAutoRefreshStarted()).toBeFalsy();
       });
@@ -29,10 +30,11 @@ describe('LastJobCloudbuildStatus', () => {
    describe('ticker', () => { 
       let sut : CloudbuildStatus;
       const timerTick = 1000;
-      let servicesFactoryMock : ServicesFactory;
+      let serviceMock: ServicesFactory;
 
       beforeEach(() => {
-         sut = new LastJobCloudbuildStatus();
+         serviceMock = new MockServicesFactory();
+         sut = new LastJobCloudbuildStatus(serviceMock);
          jest.useFakeTimers();
       });
 
@@ -44,10 +46,10 @@ describe('LastJobCloudbuildStatus', () => {
 
       test('should call gcloud when new commits are pushed', () => {
          // Given
-
+         
          // When
-         sut.startAutoRefresh();
-         jest.advanceTimersByTime(timerTick);
+         //sut.startAutoRefresh();
+         //jest.advanceTimersByTime(timerTick);
          // Then
       });
 
