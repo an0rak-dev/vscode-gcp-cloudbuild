@@ -36,4 +36,15 @@ export class GitFileSystemRepository {
             });     
          });
     }
+
+    fetch(branchName: string, remoteName: string) : Promise<string> {
+        return new Promise((resolve, reject) => {
+            let refPath = path.join(this.path, 'refs', 'remotes', remoteName);
+            refPath = path.join(refPath, branchName);
+            fs.readFile(refPath, "utf-8", (err, data) => {
+                if (err) { reject(err); }
+                else { resolve(data.replace('\n', '')); }
+            });
+        });
+    }
 }

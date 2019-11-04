@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import {LastJobCloudbuildStatus} from './impls/cloudbuildStatus';
+import {LastJobIfNeededStatus} from './impls/cloudbuildNeededStatus';
 
 /**
  * ActivitiesFactory exposes methods to retrieve all the activities.
@@ -14,7 +14,7 @@ import {LastJobCloudbuildStatus} from './impls/cloudbuildStatus';
  */
 export class ActivitiesFactory {
    getCloudbuildStatus() : CloudbuildStatus {
-      return new LastJobCloudbuildStatus();
+      return new LastJobIfNeededStatus();
    }
 }
 

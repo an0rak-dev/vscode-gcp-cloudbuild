@@ -58,4 +58,12 @@ export interface GitRepository {
     * error if the path of this GitRepo doesn't points to an actual repository.
     */
    getCurrentBranch() : Promise<string>;
+
+   /**
+    * Fetch the last commit pushed on the given remote for the given branch.
+    * 
+    * @param branchName the branch of the wanted commit
+    * @param remoteName the remote of the wanted commit
+    */
+   fetch(branchName: string, remoteName: string) : Promise<string>;
 }
